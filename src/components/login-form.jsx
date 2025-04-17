@@ -9,11 +9,21 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/authSlice";
 
 export function LoginForm({
   className,
   ...props
 }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const hanleLogin = (e) => {
+    e.preventDefault();
+    dispatch(login());
+    navigate('/home',{ replace: true });
+  };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,7 +34,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={hanleLogin}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
                 <Button variant="outline" className="w-full">
