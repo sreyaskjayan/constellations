@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { GalleryVerticalEnd } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -12,14 +13,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/authSlice";
+import { login, setUserData } from "@/store/authSlice";
 
 
 export default function Login({className, ...props}) {
+  const [ credentials, setCredentials ] = useState({email: '', password: ''});
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const hanleLogin = (e) => {
     e.preventDefault();
+    const userData = {name: 'John Doe', email: credentials.email};
+    dispatch(setUserData(userData));
     dispatch(login());
     navigate('/home',{ replace: true });
   };
@@ -71,7 +75,15 @@ export default function Login({className, ...props}) {
                   <div className="grid gap-6">
                     <div className="grid gap-3">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="m@example.com" required autoComplete="email" />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="m@example.com" 
+                        required 
+                        autoComplete="email" 
+                        onChange={(e) => setCredentials({...credentials, email: e.target.value})} 
+                        value={credentials.email}
+                      />
                     </div>
                     <div className="grid gap-3">
                       <div className="flex items-center">
@@ -80,7 +92,14 @@ export default function Login({className, ...props}) {
                           Forgot your password?
                         </a>
                       </div>
-                      <Input id="password" type="password" required />
+                      <Input 
+                        id="password" 
+                        type="password" 
+                        required 
+                        autoComplete="current-password" 
+                        onChange={(e) => setCredentials({...credentials, password: e.target.value})} 
+                        value={credentials.password}
+                      />
                     </div>
                     <Button type="submit" className="w-full">
                       Login
