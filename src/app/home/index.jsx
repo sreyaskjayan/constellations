@@ -19,11 +19,13 @@ const Home = () => {
 		dispatch(toggleTheme())
 	}
 	return (
-		<div className="flex flex-col items-center justify-center min-h-svh">
-			<Button onClick={onClick}>{theme}</Button>
-			<Button onClick={handleLogout}>LogOut</Button>
-			<h1>hii</h1>
-		</div>
+		// <div className="flex flex-col items-center justify-center min-h-svh">
+		<div className='flex flex-col items-center justify-center w-full min-h-screen'>
+  <Button onClick={onClick}>{theme}</Button>
+  <Button onClick={handleLogout}>LogOut</Button>
+  <h1>hii</h1>
+</div>
+		// </div>
 	)
 }
 
