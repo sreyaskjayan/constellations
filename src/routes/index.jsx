@@ -17,7 +17,7 @@ function Router() {
         <Route element={<ProtectedRoute />}>
           <Route element={<LayoutWithSidebar />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboards" element={<Dashboard />} />
             <Route path="/devices" element={<Devices />} />
           </Route>
         </Route>
