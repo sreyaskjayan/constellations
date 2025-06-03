@@ -8,7 +8,8 @@ import {
 	Send,
 	Settings2,
 	SquareTerminal,
-	LayoutDashboard 
+	LayoutDashboard, 
+	Bell
 } from "lucide-react"
 
 
@@ -37,14 +38,14 @@ const data = {
 			icon: Bot,
 		},
 		{
-			title: "Documentation",
-			url: "#",
-			icon: BookOpen,
+			title: "Rule Engine",
+			url: "rule-engine",
+			icon: Settings2,
 		},
 		{
-			title: "Settings",
-			url: "#",
-			icon: Settings2,
+			title: "Alarms",
+			url: "alarms",
+			icon: Bell,
 		},
 	],
 	navSecondary: [
@@ -54,7 +55,7 @@ const data = {
 			icon: LifeBuoy,
 		},
 		{
-			title: "Feedback",
+			title: "Documentation",
 			url: "#",
 			icon: Send,
 		},

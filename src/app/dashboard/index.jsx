@@ -1,260 +1,199 @@
-import { useState } from 'react';
-import { 
-  Check, 
-  Pencil, 
-  Trash2,
-  ChevronUp,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight
-} from 'lucide-react';
+import { DataTable } from "../../components/ui/data-table"
+import { Card } from "@/components/ui/card"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  CircleCheck,
+  EllipsisVertical,
+  Loader,
+} from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 
-export default function DataTable() {
-  // Sample data
-  const [data, setData] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", status: "Active" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", status: "Pending" },
-    { id: 3, name: "Mike Johnson", email: "mike@example.com", status: "Inactive" },
-    { id: 4, name: "Sarah Williams", email: "sarah@example.com", status: "Active" },
-    { id: 5, name: "Alex Brown", email: "alex@example.com", status: "Pending" },
-    { id: 6, name: "Emily Davis", email: "emily@example.com", status: "Active" },
-    { id: 7, name: "Robert Wilson", email: "robert@example.com", status: "Inactive" },
-    { id: 8, name: "Jessica Taylor", email: "jessica@example.com", status: "Pending" },
-    { id: 9, name: "Daniel Anderson", email: "daniel@example.com", status: "Active" },
-    { id: 10, name: "Lisa Thomas", email: "lisa@example.com", status: "Pending" },
-    { id: 11, name: "Mark Garcia", email: "mark@example.com", status: "Inactive" },
-    { id: 12, name: "Karen Martinez", email: "karen@example.com", status: "Active" },
-    { id: 13, name: "Paul Robinson", email: "paul@example.com", status: "Pending" },
-    { id: 14, name: "Elizabeth Clark", email: "elizabeth@example.com", status: "Active" },
-    { id: 15, name: "David Rodriguez", email: "david@example.com", status: "Inactive" },
-  ]);
-  
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+const data = [
+		// { "id": 1, "type": "Cover page", "status": "In Process", "target": "18", "limit": "5", "reviewer": "Eddie Lake" },
+		// { "id": 2, "type": "Table of contents", "status": "Done", "target": "29", "limit": "24", "reviewer": "Eddie Lake" },
+		// { "id": 3,  "type": "Narrative", "status": "Done", "target": "10", "limit": "13", "reviewer": "Eddie Lake" },
+		// { "id": 4, "type": "Narrative", "status": "Done", "target": "27", "limit": "23", "reviewer": "Jamik Tashpulatov" },
+		// { "id": 5, "type": "Narrative", "status": "In Process", "target": "2", "limit": "16", "reviewer": "Jamik Tashpulatov" },
+		// { "id": 6, "type": "Narrative", "status": "In Process", "target": "20", "limit": "8", "reviewer": "Jamik Tashpulatov" },
+		// { "id": 7, "type": "Narrative", "status": "Done", "target": "25", "limit": "26", "reviewer": "Assign reviewer" },
+		// { "id": 8, "type": "Narrative", "status": "Done", "target": "7", "limit": "23", "reviewer": "Assign reviewer" },
+		// { "id": 9, "type": "Technical content", "status": "Done", "target": "30", "limit": "28", "reviewer": "Assign reviewer" },
+		// { "id": 10, "type": "Narrative", "status": "Done", "target": "9", "limit": "31", "reviewer": "Assign reviewer" },
+		// { "id": 11, "type": "Narrative", "status": "Done", "target": "12", "limit": "0", "reviewer": "Assign reviewer" },
+		// { "id": 12, "type": "Narrative", "status": "Done", "target": "22", "limit": "33", "reviewer": "Assign reviewer" },
+		// { "id": 13, "type": "Narrative", "status": "Done", "target": "15", "limit": "34", "reviewer": "Assign reviewer" }, 
+		// { "id": 14, "type": "Narrative", "status": "Done", "target": "3", "limit": "35", "reviewer": "Assign reviewer" },
+		// { "id": 15, "type": "Narrative", "status": "Done", "target": "6", "limit": "36", "reviewer": "Assign reviewer" },
+		// { "id": 16, "type": "Narrative", "status": "In Process", "target": "4", "limit": "37", "reviewer": "Assign reviewer" },
+		// { "id": 17, "type": "Plain language", "status": "Done", "target": "14", "limit": "38", "reviewer": "Assign reviewer" },
+		// { "id": 18, "type": "Narrative", "status": "Done", "target": "17", "limit": "39", "reviewer": "Assign reviewer" },
+		// { "id": 19, "type": "Narrative", "status": "Done", "target": "11", "limit": "40", "reviewer": "Assign reviewer" },
+		// { "id": 20, "type": "Technical content", "status": "In Process", "target": "24", "limit": "18", "reviewer": "Maya Johnson" },
+		// { "id": 21, "type": "Narrative", "status": "Done", "target": "15", "limit": "22", "reviewer": "Carlos Rodriguez" },
+		// { "id": 22, "type": "Legal", "status": "In Process", "target": "31", "limit": "27", "reviewer": "Sarah Chen" },
+		// { "id": 23, "type": "Technical content", "status": "Done", "target": "8", "limit": "12", "reviewer": "Raj Patel" },
+		// { "id": 24, "type": "Visual", "status": "In Process", "target": "19", "limit": "25", "reviewer": "Leila Ahmadi" },
+		// { "id": 25, "type": "Technical content", "status": "Done", "target": "22", "limit": "20", "reviewer": "Thomas Wilson" },
+		// { "id": 26, "type": "Research", "status": "Done", "target": "29", "limit": "32", "reviewer": "Sophia Martinez" },
+		// { "id": 27, "type": "Narrative", "status": "In Process", "target": "17", "limit": "14", "reviewer": "Assign reviewer" },    
+		// { "id": 28, "type": "Narrative", "status": "Done", "target": "26", "limit": "30", "reviewer": "Eddie Lake" },    
+		// { "id": 29, "type": "Financial", "status": "In Process", "target": "13", "limit": "16", "reviewer": "Jamik Tashpulatov" },
+		// { "id": 30, "type": "Research", "status": "Done", "target": "29", "limit": "32", "reviewer": "Sophia Martinez" }
+]
 
-  // State for sorting
-  const [sortConfig, setSortConfig] = useState({
-    key: 'id',
-    direction: 'ascending'
-  });
+const columns = [
+	{
+		accessorKey: "type",
+		header: "Section Type",
+		cell: ({ row }) => (
+			<div className="w-32">
+				<Badge variant="outline" className="text-muted-foreground px-1.5">
+					{row.original.type}
+				</Badge>
+			</div>
+		),
+	},
+	{
+		accessorKey: "status",
+		header: "Status",
+		cell: ({ row }) => (
+			<Badge variant="outline" className="text-muted-foreground px-1.5">
+				{row.original.status === "Done" ? (
+					<CircleCheck className="fill-green-500 dark:fill-green-400" />
+				) : (
+					<Loader />
+				)}
+				{row.original.status}
+			</Badge>
+		),
+	},
+	{
+		accessorKey: "target",
+		header: () => <div className="w-full text-right">Target</div>,
+		cell: ({ row }) => (
+			<form
+				onSubmit={(e) => {
+					e.preventDefault()
+				}}>
+				<Label htmlFor={`${row.original.id}-target`} className="sr-only">
+					Target
+				</Label>
+				<Input
+					className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+					defaultValue={row.original.target}
+					id={`${row.original.id}-target`} />
+			</form>
+		),
+	},
+	{
+		accessorKey: "limit",
+		header: () => <div className="w-full text-right">Limit</div>,
+		cell: ({ row }) => (
+			<form
+				onSubmit={(e) => {
+					e.preventDefault()
+				}}>
+				<Label htmlFor={`${row.original.id}-limit`} className="sr-only">
+					Limit
+				</Label>
+				<Input
+					className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+					defaultValue={row.original.limit}
+					id={`${row.original.id}-limit`} />
+			</form>
+		),
+	},
+	{
+		accessorKey: "reviewer",
+		header: "Reviewer",
+		cell: ({ row }) => {
+			const isAssigned = row.original.reviewer !== "Assign reviewer"
+			if (isAssigned) {
+				return row.original.reviewer
+			}
+			return (
+				<>
+					<Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
+						Reviewer
+					</Label>
+					<Select>
+						<SelectTrigger
+							className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
+							size="sm"
+							id={`${row.original.id}-reviewer`}>
+							<SelectValue placeholder="Assign reviewer" />
+						</SelectTrigger>
+						<SelectContent align="end">
+							<SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
+							<SelectItem value="Jamik Tashpulatov">
+								Jamik Tashpulatov
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</>
+			);
+		},
+	},
+	{
+		id: "actions",
+		cell: () => (
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						variant="ghost"
+						className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+						size="icon">
+						<EllipsisVertical />
+						<span className="sr-only">Open menu</span>
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end" className="w-32">
+					<DropdownMenuItem>Edit</DropdownMenuItem>
+					<DropdownMenuItem>Make a copy</DropdownMenuItem>
+					<DropdownMenuItem>Favorite</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		),
+	},
+	{
+		header: "Actions",
+		cell: ({ row }) => {
+			return (
+				<Button variant="outline">
+					Open
+				</Button>
+			)
+		},
+	}
+]	
 
-  // Handler for edit button
-  const handleEdit = (id) => {
-    alert(`Editing row with ID: ${id}`);
-  };
 
-  // Handler for delete button
-  const handleDelete = (id) => {
-    setData(data.filter(item => item.id !== id));
-  };
+export default function Dashboard() {
+	return (
+		// <Card>
+		<ChartContainer>
 
-  // Handler for activate/deactivate button
-  const handleToggleStatus = (id) => {
-    setData(data.map(item => {
-      if (item.id === id) {
-        const newStatus = item.status === "Active" ? "Inactive" : "Active";
-        return { ...item, status: newStatus };
-      }
-      return item;
-    }));
-  };
+			<DataTable data={data} columns={columns}/>
+		</ChartContainer>
 
-  // Sort handler
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  // Apply sorting
-  const sortedData = [...data].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? -1 : 1;
-    }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
-      return sortConfig.direction === 'ascending' ? 1 : -1;
-    }
-    return 0;
-  });
-  
-  // Get current page data
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
-  
-  // Calculate total pages
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  
-  // Pagination handlers
-  const goToPage = (pageNumber) => {
-    setCurrentPage(Math.max(1, Math.min(pageNumber, totalPages)));
-  };
-  
-  const goToFirstPage = () => goToPage(1);
-  const goToPreviousPage = () => goToPage(currentPage - 1);
-  const goToNextPage = () => goToPage(currentPage + 1);
-  const goToLastPage = () => goToPage(totalPages);
-
-  // Get sort indicator
-  const getSortDirection = (name) => {
-    if (sortConfig.key === name) {
-      return sortConfig.direction === 'ascending' ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />;
-    }
-    return null;
-  };
-
-  return (
-    <div className="w-full p-4 bg-white dark:bg-[oklch(0.145_0_0)] dark:text-[oklch(0.985_0_0)]">
-      <h2 className="text-2xl font-bold mb-4">User Management</h2>
-      <div className="rounded-md border border-gray-200 dark:border-[oklch(1_0_0_/_10%)]">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-gray-50 dark:bg-[oklch(0.205_0_0)] dark:border-[oklch(1_0_0_/_10%)]">
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-[oklch(0.708_0_0)] cursor-pointer" onClick={() => requestSort('id')}>
-                <div className="flex items-center">
-                  ID {getSortDirection('id')}
-                </div>
-              </th>
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-[oklch(0.708_0_0)] cursor-pointer" onClick={() => requestSort('name')}>
-                <div className="flex items-center">
-                  Name {getSortDirection('name')}
-                </div>
-              </th>
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-[oklch(0.708_0_0)] cursor-pointer" onClick={() => requestSort('email')}>
-                <div className="flex items-center">
-                  Email {getSortDirection('email')}
-                </div>
-              </th>
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-[oklch(0.708_0_0)] cursor-pointer" onClick={() => requestSort('status')}>
-                <div className="flex items-center">
-                  Status {getSortDirection('status')}
-                </div>
-              </th>
-              <th className="h-12 px-4 text-right align-middle font-medium text-gray-500 dark:text-[oklch(0.708_0_0)]">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((row) => (
-              <tr key={row.id} className="border-b hover:bg-gray-50 dark:border-[oklch(1_0_0_/_10%)] dark:hover:bg-[oklch(0.205_0_0)]">
-                <td className="p-4 align-middle">{row.id}</td>
-                <td className="p-4 align-middle font-medium">{row.name}</td>
-                <td className="p-4 align-middle">{row.email}</td>
-                <td className="p-4 align-middle">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    row.status === 'Active' ? 'bg-green-100 text-green-800' :
-                    row.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {row.status}
-                  </span>
-                </td>
-                <td className="p-4 align-middle text-right">
-                  <div className="flex justify-end gap-2">
-                    <button 
-                      onClick={() => handleToggleStatus(row.id)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-                    >
-                      <Check className="h-4 w-4" />
-                      <span className="sr-only">Toggle status</span>
-                    </button>
-                    <button 
-                      onClick={() => handleEdit(row.id)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-                    >
-                      <Pencil className="h-4 w-4" />
-                      <span className="sr-only">Edit</span>
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(row.id)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium text-red-500 shadow-sm transition-colors hover:bg-gray-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.704_0.191_22.216)] dark:hover:bg-[oklch(0.205_0_0)]"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Delete</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {currentItems.length === 0 && (
-              <tr>
-                <td colSpan="5" className="p-4 text-center text-gray-500 dark:text-[oklch(0.708_0_0)]">No data available</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-between px-2 py-4">
-        <div className="flex-1 text-sm text-gray-700 dark:text-[oklch(0.708_0_0)]">
-          Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
-          <span className="font-medium">{Math.min(indexOfLastItem, data.length)}</span> of{" "}
-          <span className="font-medium">{data.length}</span> results
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={goToFirstPage}
-              disabled={currentPage === 1}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-            >
-              <span className="sr-only">Go to first page</span>
-              <ChevronsLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-            >
-              <span className="sr-only">Go to previous page</span>
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          </div>
-          
-          <div className="flex items-center">
-            <span className="text-sm font-medium dark:text-[oklch(0.708_0_0)]">
-              Page {currentPage} of {totalPages}
-            </span>
-          </div>
-          
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={goToNextPage}
-              disabled={currentPage === totalPages}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-            >
-              <span className="sr-only">Go to next page</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <button
-              onClick={goToLastPage}
-              disabled={currentPage === totalPages}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)] dark:hover:bg-[oklch(0.205_0_0)]"
-            >
-              <span className="sr-only">Go to last page</span>
-              <ChevronsRight className="h-4 w-4" />
-            </button>
-          </div>
-          
-          <select
-            value={itemsPerPage}
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="h-8 rounded-md border border-gray-200 bg-white px-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 dark:border-[oklch(1_0_0_/_10%)] dark:bg-[oklch(0.269_0_0)] dark:text-[oklch(0.985_0_0)]"
-          >
-            <option value="5">5 per page</option>
-            <option value="10">10 per page</option>
-            <option value="15">15 per page</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  );
+		// </Card>
+	)
 }
